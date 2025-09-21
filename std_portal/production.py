@@ -11,16 +11,15 @@ DEBUG = False
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
-# Allowed hosts for production
+# Allowed hosts for production - HARDCODED FOR IMMEDIATE FIX
 ALLOWED_HOSTS = [
     'student-portal-if4i.onrender.com',
     'localhost',
     '127.0.0.1',
-    '0.0.0.0'
+    '0.0.0.0',
+    '*',  # Allow all hosts temporarily
 ]
-# Add any additional hosts from environment variable
-if os.environ.get('ALLOWED_HOSTS'):
-    ALLOWED_HOSTS.extend(os.environ.get('ALLOWED_HOSTS').split(','))
+print(f"DEBUG: ALLOWED_HOSTS = {ALLOWED_HOSTS}")
 
 # Database configuration for production
 DATABASES = {
