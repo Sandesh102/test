@@ -16,7 +16,7 @@ services:
       - key: DEBUG
         value: False
       - key: ALLOWED_HOSTS
-        value: student-portal.onrender.com
+        value: student-portal-if4i.onrender.com
       - key: DB_NAME
         value: student_portal_db_a2e2
       - key: DB_USER
