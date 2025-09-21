@@ -10,7 +10,7 @@ services:
     startCommand: gunicorn std_portal.wsgi:application
     envVars:
       - key: DJANGO_SETTINGS_MODULE
-        value: std_portal.production
+        value: std_portal.settings
       - key: SECRET_KEY
         generateValue: true
       - key: DEBUG
