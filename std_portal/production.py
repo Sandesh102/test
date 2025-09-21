@@ -12,7 +12,7 @@ DEBUG = False
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # Allowed hosts for production
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'student-portal-if4i.onrender.com').split(',')
 
 # Database configuration for production
 DATABASES = {
