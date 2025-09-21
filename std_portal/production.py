@@ -23,18 +23,25 @@ print(f"DEBUG: ALLOWED_HOSTS = {ALLOWED_HOSTS}")
 print("DEBUG: This is commit 993a30b - FORCE DEPLOYMENT")
 print("DEBUG: If you see this, the latest code is deployed!")
 
-# Database configuration for production - USING POSTGRESQL
-# HARDCODED DATABASE CREDENTIALS TO BYPASS ENVIRONMENT VARIABLE ISSUES
+# Database configuration for production - TEMPORARILY USING SQLITE TO GET APP WORKING
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'student_portal_db_a2e2',
-        'USER': 'student_portal_db_a2e2_user',
-        'PASSWORD': 'xP59H1q1uG9d3xwjTxMBRc90fhE86HOd',
-        'HOST': 'dpg-d380kkodl3ps73au33vg-a.oregon-postgres.render.com',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# PostgreSQL configuration (commented out temporarily - will fix later)
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'student_portal_db_a2e2',
+#         'USER': 'student_portal_db_a2e2_user',
+#         'PASSWORD': 'xP59H1q1uG9d3xwjTxMBRc90fhE86HOd',
+#         'HOST': 'dpg-d380kkodl3ps73au33vg-a.oregon-postgres.render.com',
+#         'PORT': '5432',
+#     }
+# }
 
 # Static files configuration
 STATIC_ROOT = BASE_DIR / 'staticfiles'
