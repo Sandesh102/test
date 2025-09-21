@@ -24,14 +24,15 @@ print("DEBUG: This is commit 993a30b - FORCE DEPLOYMENT")
 print("DEBUG: If you see this, the latest code is deployed!")
 
 # Database configuration for production - USING POSTGRESQL
+# HARDCODED DATABASE CREDENTIALS TO BYPASS ENVIRONMENT VARIABLE ISSUES
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST', 'localhost'),
-        'PORT': os.environ.get('DB_PORT', '5432'),
+        'NAME': 'student_portal_db_a2e2',
+        'USER': 'student_portal_db_a2e2_user',
+        'PASSWORD': 'xP59H1q1uG9d3xwjTxMBRc90fhE86HOd',
+        'HOST': 'dpg-d380kkodl3ps73au33vg-a.oregon-postgres.render.com',
+        'PORT': '5432',
     }
 }
 
