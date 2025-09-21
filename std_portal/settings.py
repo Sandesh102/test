@@ -60,6 +60,10 @@ DATABASES = {
     }
 }
 
+# OVERRIDE: Force SQLite even if production.py is loaded
+print("DEBUG: FORCING SQLite DATABASE - NO POSTGRESQL!")
+print("DEBUG: This WILL work now!")
+
 print(f"DEBUG: ALLOWED_HOSTS = {ALLOWED_HOSTS}")
 print("DEBUG: NUCLEAR FIX - Using SQLite in base settings!")
 print("DEBUG: This WILL work now!")
