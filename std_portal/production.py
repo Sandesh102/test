@@ -20,6 +20,8 @@ ALLOWED_HOSTS = [
     '*',  # Allow all hosts temporarily
 ]
 print(f"DEBUG: ALLOWED_HOSTS = {ALLOWED_HOSTS}")
+print("DEBUG: This is commit 993a30b - FORCE DEPLOYMENT")
+print("DEBUG: If you see this, the latest code is deployed!")
 
 # Database configuration for production
 DATABASES = {
