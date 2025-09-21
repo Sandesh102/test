@@ -23,17 +23,25 @@ print(f"DEBUG: ALLOWED_HOSTS = {ALLOWED_HOSTS}")
 print("DEBUG: This is commit 993a30b - FORCE DEPLOYMENT")
 print("DEBUG: If you see this, the latest code is deployed!")
 
-# Database configuration for production
+# Database configuration for production - TEMPORARILY USING SQLITE
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST', 'localhost'),
-        'PORT': os.environ.get('DB_PORT', '5432'),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# PostgreSQL configuration (commented out temporarily)
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': os.environ.get('DB_NAME'),
+#         'USER': os.environ.get('DB_USER'),
+#         'PASSWORD': os.environ.get('DB_PASSWORD'),
+#         'HOST': os.environ.get('DB_HOST', 'localhost'),
+#         'PORT': os.environ.get('DB_PORT', '5432'),
+#     }
+# }
 
 # Static files configuration
 STATIC_ROOT = BASE_DIR / 'staticfiles'
