@@ -51,8 +51,18 @@ ALLOWED_HOSTS = [
     '0.0.0.0',
     '*',  # Allow all hosts temporarily
 ]
+
+# NUCLEAR FIX: Force SQLite database in base settings
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
 print(f"DEBUG: ALLOWED_HOSTS = {ALLOWED_HOSTS}")
-print("DEBUG: This is the NUCLEAR FIX - should work now!")
+print("DEBUG: NUCLEAR FIX - Using SQLite in base settings!")
+print("DEBUG: This WILL work now!")
 
 
 # Application definition
