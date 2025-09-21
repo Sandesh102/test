@@ -44,7 +44,15 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-3r+4139faw00sr0r=j4sm(mwz&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = [
+    'student-portal-if4i.onrender.com',
+    'localhost',
+    '127.0.0.1',
+    '0.0.0.0',
+    '*',  # Allow all hosts temporarily
+]
+print(f"DEBUG: ALLOWED_HOSTS = {ALLOWED_HOSTS}")
+print("DEBUG: This is the NUCLEAR FIX - should work now!")
 
 
 # Application definition
