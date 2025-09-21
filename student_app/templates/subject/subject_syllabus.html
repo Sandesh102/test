@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link href="{% static 'css/subject_syllabus.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+<div class="content-container">
+    <div class="page-header">
+        <h1>{{ subject.name }} - Syllabus</h1>
+        <span class="badge bg-primary">{{ subject.faculty.name }}</span>
+        <a href="{% url 'subject_detail' subject.id %}" class="back-button">
+            <i class="fas fa-arrow-left"></i> Back to Subject
+        </a>
+    </div>
+
+    <div class="content-section">
+        {% if syllabi %}
+            {% for syllabus in syllabi %}
+            <div class="syllabus-content mb-4">
+                <h2>{{ syllabus.title }}</h2>
+                <div class="syllabus-meta mb-3">
+                    <small class="text-muted">
+                        <i class="fas fa-user me-1"></i>Uploaded by {{ syllabus.uploaded_by.get_full_name|default:syllabus.uploaded_by.username }}
+                        <span class="mx-2">•</span>
+                        <i class="fas fa-calendar me-1"></i>{{ syllabus.created_at|date:"M d, Y" }}
+                    </small>
+                </div>
+                <div class="syllabus-description">
+                    {{ syllabus.content|linebreaks }}
+                </div>
+                {% if syllabus.file %}
+                <div class="file-actions mt-3">
+                    <a href="{{ syllabus.file.url }}" class="action-button download-button" download>
+                        <i class="fas fa-download"></i> Download Syllabus
+                    </a>
+                    <a href="{{ syllabus.file.url }}" class="action-button view-button" target="_blank">
+                        <i class="fas fa-eye"></i> View in New Tab
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+            {% if not forloop.last %}<hr class="my-4">{% endif %}
+            {% endfor %}
+        {% else %}
+            <div class="no-content">
+                <i class="fas fa-info-circle"></i>
+                <p>No syllabus available for this subject.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+ 
+{% endblock %} 

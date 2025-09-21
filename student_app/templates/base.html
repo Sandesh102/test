@@ -1,0 +1,381 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      {% block title %}Sikshya Kendra - Student Portal{% endblock %}
+    </title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome 6 -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <!-- App Base CSS -->
+    <link href="{% static 'css/base.css' %}" rel="stylesheet" />
+    {% block extra_css %}{% endblock %}
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+      <div class="container">
+        <!-- Logo Section - Left -->
+        <a class="navbar-brand" href="{% url 'home' %}">
+          <i class="fas fa-graduation-cap me-2"></i>Sikshya Kendra
+        </a>
+
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <!-- Navigation Links - Center -->
+          <ul class="navbar-nav mx-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'home' %}">
+                <i class="fas fa-home me-1"></i>Home
+              </a>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+              >
+                <i class="fas fa-university me-1"></i>Faculties <i class="fas fa-chevron-down ms-1"></i>
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="{% url 'faculty_overview' 'bsccsit' %}"
+                  >
+                    <i class="fas fa-laptop-code me-2"></i>B.Sc. CSIT
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="{% url 'faculty_overview' 'bbs' %}"
+                  >
+                    <i class="fas fa-briefcase me-2"></i>BBS
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="{% url 'faculty_overview' 'bba' %}"
+                  >
+                    <i class="fas fa-chart-line me-2"></i>BBA
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="{% url 'faculty_overview' 'bsc' %}"
+                  >
+                    <i class="fas fa-flask me-2"></i>B.Sc.
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'search' %}">
+                <i class="fas fa-search me-1"></i>Search
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'mcq_faculty_selection' %}">
+                <i class="fas fa-question-circle me-1"></i>MCQ Quiz
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'notices' %}">
+                <i class="fas fa-bullhorn me-1"></i>Notices
+              </a>
+            </li>
+            <!-- <li class="nav-item">
+              <a class="nav-link" href="{% url 'articles' %}">
+                <i class="fas fa-newspaper me-1"></i>Articles
+              </a>
+            </li> -->
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'contact' %}">
+                <i class="fas fa-envelope me-1"></i>Contact
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'about' %}">
+                <i class="fas fa-info-circle me-1"></i>About
+              </a>
+            </li>
+          </ul>
+
+          <!-- User Actions - Right -->
+          <ul class="navbar-nav">
+            {% if user.is_authenticated %}
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <i class="fas fa-user me-2"></i>{{ user.get_full_name|default:user.username }}
+              </a>
+              <ul class="dropdown-menu">
+                {% if user.is_superuser %}
+                <li>
+                  <a class="dropdown-item" href="{% url 'admin_dashboard' %}">
+                    <i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard
+                  </a>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                {% endif %}
+                <li>
+                  <a class="dropdown-item" href="{% url 'dashboard' %}">
+                    <i class="fas fa-home me-2"></i>Dashboard
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{% url 'profile' %}">
+                    <i class="fas fa-user-circle me-2"></i>Profile
+                  </a>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a class="dropdown-item" href="{% url 'logout' %}">
+                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                  </a>
+                </li>
+              </ul>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'login' %}">
+                <i class="fas fa-sign-in-alt me-1"></i>Login
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="btn btn-primary" href="{% url 'register' %}">
+                <i class="fas fa-user-plus me-1"></i>Register
+              </a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1055;">
+      {% if messages %}
+        {% for message in messages %}
+        <div class="toast align-items-center text-bg-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} border-0 show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="3000">
+          <div class="d-flex">
+            <div class="toast-body">
+              <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-circle{% elif message.tags == 'warning' %}exclamation-triangle{% else %}info-circle{% endif %} me-2"></i>
+              {{ message }}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+        </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    <!-- Main Content -->
+    <main style="margin-top: 80px">
+      {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col-lg-3 mb-4">
+            <h5 class="text-gradient mb-3">
+              <i class="fas fa-graduation-cap me-2"></i>Sikshya Kendra
+            </h5>
+            <p class="mb-3">
+              Your comprehensive student portal for accessing educational
+              resources, study materials, and academic support across various
+              faculties.
+            </p>
+            <div class="d-flex gap-3">
+              <a href="#" class="text-white"
+                ><i class="fab fa-facebook fa-lg"></i
+              ></a>
+              <a href="#" class="text-white"
+                ><i class="fab fa-twitter fa-lg"></i
+              ></a>
+              <a href="#" class="text-white"
+                ><i class="fab fa-instagram fa-lg"></i
+              ></a>
+              <a href="#" class="text-white"
+                ><i class="fab fa-linkedin fa-lg"></i
+              ></a>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 mb-4">
+            <h6 class="mb-3">Quick Links</h6>
+            <ul class="list-unstyled">
+              <li>
+                <a
+                  href="{% url 'home' %}"
+                  class="text-white-50 text-decoration-none"
+                  >Home</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{% url 'about' %}"
+                  class="text-white-50 text-decoration-none"
+                  >About</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{% url 'contact' %}"
+                  class="text-white-50 text-decoration-none"
+                  >Contact</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{% url 'search' %}"
+                  class="text-white-50 text-decoration-none"
+                  >Search</a
+                >
+              </li>
+            </ul>
+          </div>
+          
+          <div class="col-lg-3 mb-4">
+            <h6 class="mb-3">Contact Info</h6>
+            <ul class="list-unstyled">
+              <li class="mb-2">
+                <i class="fas fa-map-marker-alt me-2"></i>
+                <span class="text-white-50">Pokhara, Nepal</span>
+              </li>
+              <li class="mb-2">
+                <i class="fas fa-phone me-2"></i>
+                <span class="text-white-50">+977-1-1234567</span>
+              </li>
+              <li class="mb-2">
+                <i class="fas fa-envelope me-2"></i>
+                <span class="text-white-50">info@sikshyakendra.edu.np</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <hr class="my-4" style="border-color: rgba(255, 255, 255, 0.2)" />
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <p class="mb-0 text-white-50">
+              &copy; 2024 Sikshya Kendra. All rights reserved.
+            </p>
+          </div>
+          <div class="col-md-6 text-md-end">
+            <p class="mb-0 text-white-50">
+              Designed with <i class="fas fa-heart text-danger"></i> for
+              students
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS Animation -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <script>
+      // Initialize AOS
+      AOS.init({
+        duration: 800,
+        easing: "ease-in-out",
+        once: true,
+      });
+
+      // Navbar scroll effect
+      window.addEventListener("scroll", function () {
+        const navbar = document.querySelector(".navbar");
+        if (window.scrollY > 50) {
+          navbar.classList.add("scrolled");
+        } else {
+          navbar.classList.remove("scrolled");
+        }
+      });
+
+      // Initialize and auto-hide toasts
+      document.addEventListener("DOMContentLoaded", function () {
+        const toasts = document.querySelectorAll(".toast");
+        toasts.forEach((toastElement) => {
+          const toast = new bootstrap.Toast(toastElement, {
+            autohide: true,
+            delay: 3000
+          });
+          toast.show();
+          
+          // Add slide-in animation
+          toastElement.style.transform = 'translateX(100%)';
+          toastElement.style.transition = 'transform 0.3s ease-in-out';
+          setTimeout(() => {
+            toastElement.style.transform = 'translateX(0)';
+          }, 100);
+        });
+      });
+
+      // Form loading states
+      document.querySelectorAll("form").forEach((form) => {
+        form.addEventListener("submit", function () {
+          const submitBtn = this.querySelector('button[type="submit"]');
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML =
+              '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+          }
+        });
+      });
+
+      // Smooth scrolling for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          }
+        });
+      });
+    </script>
+
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

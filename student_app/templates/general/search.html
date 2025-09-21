@@ -1,0 +1,542 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Enhanced Search | Sikshya Kendra{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'css/search.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+<div class="search-container">
+    <!-- Enhanced Search Header -->
+    <div class="search-header">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <h1 class="search-title">
+                        <i class="fas fa-search me-3"></i>
+                        Enhanced Academic Search
+                    </h1>
+                    <p class="search-subtitle">
+                        Powered by TF-IDF and Cosine Similarity algorithms for precise results
+                    </p>
+                    
+                    <!-- Modern Search Form -->
+                    <form method="get" class="search-form">
+                        <div class="search-input-group">
+                        <input type="text" 
+                               name="q" 
+                               class="form-control search-input" 
+                               placeholder="Search for subjects, syllabus, question banks, chapters..." 
+                               value="{{ query }}"
+                               autocomplete="off">
+                            <button type="submit" class="btn btn-search">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Advanced Filters -->
+                        <div class="search-filters">
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <select name="faculty" class="form-select filter-select">
+                                        <option value="">All Faculties</option>
+                                        {% for faculty in faculties %}
+                                            <option value="{{ faculty.id }}" {% if faculty.id|stringformat:'s' == faculty_id %}selected{% endif %}>
+                                                {{ faculty.name }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select name="subject" class="form-select filter-select">
+                                        <option value="">All Subjects</option>
+                                        {% for subject in subjects %}
+                                            <option value="{{ subject.id }}" {% if subject.id|stringformat:'s' == subject_id %}selected{% endif %}>
+                                                {{ subject.name }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select name="type" class="form-select filter-select">
+                                        <option value="">All Types</option>
+                                        <option value="subject" {% if resource_type == 'subject' %}selected{% endif %}>Subjects</option>
+                                        <option value="syllabus" {% if resource_type == 'syllabus' %}selected{% endif %}>Syllabus</option>
+                                        <option value="questionbank" {% if resource_type == 'questionbank' %}selected{% endif %}>Question Banks</option>
+                                        <option value="chapter" {% if resource_type == 'chapter' %}selected{% endif %}>Chapters</option>
+                                        <option value="viva" {% if resource_type == 'viva' %}selected{% endif %}>Viva</option>
+                                        <option value="textbook" {% if resource_type == 'textbook' %}selected{% endif %}>Text Books</option>
+                                        <option value="practical" {% if resource_type == 'practical' %}selected{% endif %}>Practical</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select name="level" class="form-select filter-select">
+                                        <option value="">All Levels</option>
+                                        {% for i in "12345678" %}
+                                            <option value="{{ i }}" {% if level == i %}selected{% endif %}>Level {{ i }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Results -->
+    <div class="container">
+        {% if query %}
+            <!-- Search Statistics -->
+            <div class="search-stats">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="stats-card">
+                            <h3>
+                                <i class="fas fa-chart-line me-2"></i>
+                                Search Results for "{{ query }}"
+                            </h3>
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <span class="stat-number">{{ search_stats.total_results }}</span>
+                                    <span class="stat-label">Total Results</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number">{{ search_stats.subjects_count }}</span>
+                                    <span class="stat-label">Subjects</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number">{{ search_stats.syllabi_count }}</span>
+                                    <span class="stat-label">Syllabi</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number">{{ search_stats.question_banks_count }}</span>
+                                    <span class="stat-label">Question Banks</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number">{{ search_stats.chapters_count }}</span>
+                                    <span class="stat-label">Chapters</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number">{{ search_stats.vivas_count }}</span>
+                                    <span class="stat-label">Viva</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number">{{ search_stats.textbooks_count }}</span>
+                                    <span class="stat-label">Text Books</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number">{{ search_stats.practicals_count }}</span>
+                                    <span class="stat-label">Practical</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grouped Results -->
+            <div class="search-results">
+                <!-- Subjects Section -->
+                {% if search_results.subjects %}
+                <div class="result-section">
+                    <div class="section-header">
+                        <h2>
+                            <i class="fas fa-graduation-cap me-2"></i>
+                            Subjects
+                            <span class="badge badge-count">{{ search_results.subjects|length }}</span>
+                        </h2>
+                    </div>
+                    <div class="results-grid">
+                        {% for subject in search_results.subjects %}
+                        <div class="result-card">
+                            <div class="card-header">
+                                <div class="resource-icon">
+                                    <i class="fas fa-graduation-cap"></i>
+                                </div>
+                                <div class="resource-meta">
+                                    <span class="resource-type">Subject</span>
+                                    <span class="resource-subject">{{ subject.faculty.name }}</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ subject.name }}</h5>
+                                <p class="card-description">{{ subject.description|truncatewords:20 }}</p>
+                                <div class="card-stats">
+                                    <span class="stat">
+                                        <i class="fas fa-layer-group"></i>
+                                        Level {{ subject.level }}
+                                    </span>
+                                    <span class="stat">
+                                        <i class="fas fa-university"></i>
+                                        {{ subject.faculty.name }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{% url 'subject_detail' subject.id %}" class="btn btn-primary">
+                                    <i class="fas fa-external-link-alt me-1"></i>
+                                    View Subject
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Syllabus Section -->
+                {% if search_results.syllabi %}
+                <div class="result-section">
+                    <div class="section-header">
+                        <h2>
+                            <i class="fas fa-book me-2"></i>
+                            Syllabus
+                            <span class="badge badge-count">{{ search_results.syllabi|length }}</span>
+                        </h2>
+                    </div>
+                    <div class="results-grid">
+                        {% for syllabus in search_results.syllabi %}
+                        <div class="result-card">
+                            <div class="card-header">
+                                <div class="resource-icon">
+                                    <i class="fas fa-book"></i>
+                                </div>
+                                <div class="resource-meta">
+                                    <span class="resource-type">Syllabus</span>
+                                    <span class="resource-subject">{{ syllabus.subject.name }}</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ syllabus.title }}</h5>
+                                <p class="card-description">{{ syllabus.content|truncatewords:20 }}</p>
+                                <div class="card-stats">
+                                    <span class="stat">
+                                        <i class="fas fa-download"></i>
+                                        {{ syllabus.download_count }} downloads
+                                    </span>
+                                    <span class="stat">
+                                        <i class="fas fa-eye"></i>
+                                        {{ syllabus.view_count }} views
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{% url 'subject_syllabus' syllabus.subject.id %}" class="btn btn-primary">
+                                    <i class="fas fa-external-link-alt me-1"></i>
+                                    View Syllabus
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Question Banks Section -->
+                {% if search_results.question_banks %}
+                <div class="result-section">
+                    <div class="section-header">
+                        <h2>
+                            <i class="fas fa-question-circle me-2"></i>
+                            Question Banks
+                            <span class="badge badge-count">{{ search_results.question_banks|length }}</span>
+                        </h2>
+                    </div>
+                    <div class="results-grid">
+                        {% for qb in search_results.question_banks %}
+                        <div class="result-card">
+                            <div class="card-header">
+                                <div class="resource-icon">
+                                    <i class="fas fa-question-circle"></i>
+                                </div>
+                                <div class="resource-meta">
+                                    <span class="resource-type">Question Bank</span>
+                                    <span class="resource-subject">{{ qb.subject.name }}</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ qb.title }}</h5>
+                                <p class="card-description">{{ qb.description|truncatewords:20 }}</p>
+                                <div class="card-stats">
+                                    <span class="stat">
+                                        <i class="fas fa-download"></i>
+                                        {{ qb.download_count }} downloads
+                                    </span>
+                                    <span class="stat">
+                                        <i class="fas fa-eye"></i>
+                                        {{ qb.view_count }} views
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{% url 'subject_questions' qb.subject.id %}" class="btn btn-primary">
+                                    <i class="fas fa-external-link-alt me-1"></i>
+                                    View Questions
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Chapters Section -->
+                {% if search_results.chapters %}
+                <div class="result-section">
+                    <div class="section-header">
+                        <h2>
+                            <i class="fas fa-list me-2"></i>
+                            Chapters
+                            <span class="badge badge-count">{{ search_results.chapters|length }}</span>
+                        </h2>
+                    </div>
+                    <div class="results-grid">
+                        {% for chapter in search_results.chapters %}
+                        <div class="result-card">
+                            <div class="card-header">
+                                <div class="resource-icon">
+                                    <i class="fas fa-list"></i>
+                                </div>
+                                <div class="resource-meta">
+                                    <span class="resource-type">Chapter {{ chapter.chapter_number }}</span>
+                                    <span class="resource-subject">{{ chapter.subject.name }}</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ chapter.title }}</h5>
+                                <p class="card-description">{{ chapter.description|truncatewords:20 }}</p>
+                                <div class="card-stats">
+                                    <span class="stat">
+                                        <i class="fas fa-download"></i>
+                                        {{ chapter.download_count }} downloads
+                                    </span>
+                                    <span class="stat">
+                                        <i class="fas fa-eye"></i>
+                                        {{ chapter.view_count }} views
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{% url 'chapter_detail' chapter.subject.id chapter.id %}" class="btn btn-primary">
+                                    <i class="fas fa-external-link-alt me-1"></i>
+                                    View Chapter
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Viva Section -->
+                {% if search_results.vivas %}
+                <div class="result-section">
+                    <div class="section-header">
+                        <h2>
+                            <i class="fas fa-microphone me-2"></i>
+                            Viva
+                            <span class="badge badge-count">{{ search_results.vivas|length }}</span>
+                        </h2>
+                    </div>
+                    <div class="results-grid">
+                        {% for viva in search_results.vivas %}
+                        <div class="result-card">
+                            <div class="card-header">
+                                <div class="resource-icon">
+                                    <i class="fas fa-microphone"></i>
+                                </div>
+                                <div class="resource-meta">
+                                    <span class="resource-type">Viva Question</span>
+                                    <span class="resource-subject">{{ viva.subject.name }}</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ viva.title }}</h5>
+                                <p class="card-description">{{ viva.description|truncatewords:20 }}</p>
+                                <div class="card-stats">
+                                    <span class="stat">
+                                        <i class="fas fa-eye"></i>
+                                        {{ viva.view_count }} views
+                                    </span>
+                                    <span class="stat">
+                                        <i class="fas fa-signal"></i>
+                                        {{ viva.difficulty_level|title }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a href="#" class="btn btn-primary" onclick="showVivaModal('{{ viva.id }}', '{{ viva.title }}', '{{ viva.question|escapejs }}', '{{ viva.answer|escapejs }}')">
+                                    <i class="fas fa-external-link-alt me-1"></i>
+                                    View Viva
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Text Books Section -->
+                {% if search_results.textbooks %}
+                <div class="result-section">
+                    <div class="section-header">
+                        <h2>
+                            <i class="fas fa-book-open me-2"></i>
+                            Text Books
+                            <span class="badge badge-count">{{ search_results.textbooks|length }}</span>
+                        </h2>
+                    </div>
+                    <div class="results-grid">
+                        {% for textbook in search_results.textbooks %}
+                        <div class="result-card">
+                            <div class="card-header">
+                                <div class="resource-icon">
+                                    <i class="fas fa-book-open"></i>
+                                </div>
+                                <div class="resource-meta">
+                                    <span class="resource-type">Text Book</span>
+                                    <span class="resource-subject">{{ textbook.subject.name }}</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ textbook.title }}</h5>
+                                <p class="card-description">{{ textbook.description|truncatewords:20 }}</p>
+                                <div class="card-stats">
+                                    <span class="stat">
+                                        <i class="fas fa-download"></i>
+                                        {{ textbook.download_count }} downloads
+                                    </span>
+                                    <span class="stat">
+                                        <i class="fas fa-eye"></i>
+                                        {{ textbook.view_count }} views
+                                    </span>
+                                </div>
+                                {% if textbook.author %}
+                                <div class="card-meta">
+                                    <small class="text-muted">
+                                        <i class="fas fa-user me-1"></i>Author: {{ textbook.author }}
+                                    </small>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="card-footer">
+                                <a href="{% url 'download_resource' 'textbook' textbook.id %}" class="btn btn-primary">
+                                    <i class="fas fa-download me-1"></i>
+                                    Download
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Practical Section -->
+                {% if search_results.practicals %}
+                <div class="result-section">
+                    <div class="section-header">
+                        <h2>
+                            <i class="fas fa-flask me-2"></i>
+                            Practical
+                            <span class="badge badge-count">{{ search_results.practicals|length }}</span>
+                        </h2>
+                    </div>
+                    <div class="results-grid">
+                        {% for practical in search_results.practicals %}
+                        <div class="result-card">
+                            <div class="card-header">
+                                <div class="resource-icon">
+                                    <i class="fas fa-flask"></i>
+                                </div>
+                                <div class="resource-meta">
+                                    <span class="resource-type">Practical</span>
+                                    <span class="resource-subject">{{ practical.subject.name }}</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ practical.title }}</h5>
+                                <p class="card-description">{{ practical.description|truncatewords:20 }}</p>
+                                <div class="card-stats">
+                                    <span class="stat">
+                                        <i class="fas fa-download"></i>
+                                        {{ practical.download_count }} downloads
+                                    </span>
+                                    <span class="stat">
+                                        <i class="fas fa-eye"></i>
+                                        {{ practical.view_count }} views
+                                    </span>
+                                </div>
+                                <div class="card-meta">
+                                    <small class="text-muted">
+                                        <i class="fas fa-signal me-1"></i>Difficulty: {{ practical.difficulty_level|title }}
+                                        {% if practical.estimated_time %}
+                                        <i class="fas fa-clock ms-2 me-1"></i>Time: {{ practical.estimated_time }}min
+                                        {% endif %}
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{% url 'download_resource' 'practical' practical.id %}" class="btn btn-primary">
+                                    <i class="fas fa-download me-1"></i>
+                                    Download
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- No Results Message -->
+                {% if search_stats.total_results == 0 %}
+                <div class="no-results">
+                    <div class="no-results-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>No Results Found</h3>
+                    <p>Try adjusting your search terms or filters to find what you're looking for.</p>
+                    <div class="search-tips">
+                        <h4>Search Tips:</h4>
+                        <ul>
+                            <li>Try different keywords</li>
+                            <li>Check your spelling</li>
+                            <li>Use more general terms</li>
+                            <li>Try different resource types</li>
+                        </ul>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        {% else %}
+            <!-- Welcome Message -->
+            <div class="welcome-section">
+                <div class="welcome-content">
+                    <h2>Welcome to Enhanced Search</h2>
+                    <p>Enter your search query above to find relevant academic resources using our advanced TF-IDF and Cosine Similarity algorithms.</p>
+                    <div class="features-grid">
+                        <div class="feature-item">
+                            <i class="fas fa-brain"></i>
+                            <h4>Smart Algorithms</h4>
+                            <p>TF-IDF and Cosine Similarity for precise relevance ranking</p>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-layer-group"></i>
+                            <h4>Grouped Results</h4>
+                            <p>Results organized by resource type for easy browsing</p>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-filter"></i>
+                            <h4>Advanced Filters</h4>
+                            <p>Filter by faculty, subject, type, and level</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

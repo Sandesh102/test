@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ faculty.name }} - {{ level_name }} | Sikshya Kendra{% endblock %}
+{% block extra_css %}
+<link href="{% static 'css/faculty_subjects.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="{% url 'faculty_overview' faculty.slug %}" class="text-decoration-none">
+                                    <i class="fas fa-university me-1"></i>{{ faculty.name }}
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">{{ level_name }}</li>
+                        </ol>
+                    </nav>
+                    <h1 class="fw-bold text-gradient mb-2">{{ faculty.name }} - {{ level_name }}</h1>
+                    <p class="text-muted mb-0">{{ faculty.description }}</p>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-calendar-alt me-2"></i>{{ level_name }}
+                    </button>
+                    <ul class="dropdown-menu">
+                        {% for level_num in levels %}
+                        <li>
+                            <a class="dropdown-item {% if level_num == level %}active{% endif %}" 
+                               href="{% url 'faculty_subjects' faculty.slug level_num %}">
+                                <i class="fas fa-star me-2"></i>{% if faculty.academic_structure == 'semester' %}{{ level_num }}{% if level_num == 1 %}st{% elif level_num == 2 %}nd{% elif level_num == 3 %}rd{% else %}th{% endif %} Semester{% else %}{{ level_num }}{% if level_num == 1 %}st{% elif level_num == 2 %}nd{% elif level_num == 3 %}rd{% else %}th{% endif %} Year{% endif %}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Subjects Grid -->
+    {% if subjects %}
+    <div class="row g-4">
+        {% for subject in subjects %}
+        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:100 }}">
+            <div class="subject-card" onclick="window.location.href='{% url 'subject_detail' subject.id %}'">
+                <div class="subject-header">
+                    <div class="subject-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="subject-info">
+                        <h5 class="subject-name">{{ subject.name }}</h5>
+                        <p class="subject-level">{{ level_name }}</p>
+                    </div>
+                </div>
+                
+                <div class="subject-actions">
+                    <a href="{% url 'subject_detail' subject.id %}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-arrow-right"></i>Explore Chapters
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="row">
+        <div class="col-12">
+            <div class="empty-state text-center py-5">
+                <div class="empty-icon mb-4">
+                    <i class="fas fa-hourglass-half fa-3x text-muted"></i>
+                </div>
+                <h3 class="text-muted mb-3">Coming Soon</h3>
+                <p class="text-muted mb-4">Subjects for {{ faculty.name }} {{ level_name }} are being prepared and will be available soon.</p>
+                <div class="coming-soon-features">
+                    <div class="feature-item">
+                        <i class="fas fa-book text-primary me-2"></i>
+                        <span>Comprehensive Study Materials</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-file-alt text-success me-2"></i>
+                        <span>Syllabus & Question Banks</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-video text-warning me-2"></i>
+                        <span>Interactive Learning Resources</span>
+                    </div>
+                </div>
+                {% if user.is_superuser %}
+                <div class="mt-4 d-flex gap-3 justify-content-center">
+                    <a href="{% url 'admin_manage_subjects' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-tools me-2"></i>Manage Subjects
+                    </a>
+                    <a href="{% url 'contribute_resource' %}" class="btn btn-outline-success">
+                        <i class="fas fa-plus me-2"></i>Add Resources
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+ 
+{% endblock %} 

@@ -1,0 +1,45 @@
+services:
+  - type: web
+    name: student-portal
+    env: python
+    plan: free
+    buildCommand: |
+      pip install -r requirements.txt
+      python manage.py collectstatic --noinput
+      python manage.py migrate
+    startCommand: gunicorn std_portal.wsgi:application
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: std_portal.production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: False
+      - key: ALLOWED_HOSTS
+        value: student-portal.onrender.com
+      - key: DB_NAME
+        value: student_portal_db_a2e2
+      - key: DB_USER
+        value: student_portal_db_a2e2_user
+      - key: DB_PASSWORD
+        value: xP59H1q1uG9d3xwjTxMBRc90fhE86HOd
+      - key: DB_HOST
+        value: dpg-d380kkodl3ps73au33vg-a.oregon-postgres.render.com
+      - key: DB_PORT
+        value: 5432
+      - key: EMAIL_HOST_USER
+        value: your-email@gmail.com
+      - key: EMAIL_HOST_PASSWORD
+        value: your-app-password
+      - key: SITE_DOMAIN
+        value: student-portal.onrender.com
+      - key: SITE_NAME
+        value: Sikshya Kendra
+
+# Database is already created externally
+# Database details:
+# Host: dpg-d380kkodl3ps73au33vg-a.oregon-postgres.render.com
+# Port: 5432
+# Database: student_portal_db_a2e2
+# User: student_portal_db_a2e2_user
+# Password: xP59H1q1uG9d3xwjTxMBRc90fhE86HOd

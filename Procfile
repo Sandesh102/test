@@ -1,0 +1,1 @@
+web: gunicorn std_portal.wsgi:application
