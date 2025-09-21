@@ -3,12 +3,14 @@ services:
     name: student-portal
     env: python
     plan: free
-    rootDir: Student_Portal
     buildCommand: |
+      cd Student_Portal
       pip install -r requirements.txt
       python manage.py collectstatic --noinput
       python manage.py migrate
-    startCommand: gunicorn std_portal.wsgi:application
+    startCommand: |
+      cd Student_Portal
+      gunicorn std_portal.wsgi:application
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: std_portal.production
