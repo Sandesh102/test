@@ -1,33 +1,29 @@
 services:
   - type: web
-    name: student-portal-nuclear-fix
+    name: student-portal-postgresql
     env: python
     plan: free
-    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate && python nuclear_admin_fix.py
-    startCommand: python nuclear_admin_fix.py && gunicorn std_portal.wsgi:application --bind 0.0.0.0:$PORT
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate && python postgresql_admin_fix.py
+    startCommand: python postgresql_admin_fix.py && gunicorn std_portal.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: DJANGO_SETTINGS_MODULE
-        value: std_portal.settings
+        value: std_portal.production
       - key: SECRET_KEY
-        value: nuclear-fix-secret-key-2025-ultimate-solution-working
+        value: postgresql-production-secret-key-2025-ultimate-solution
       - key: DEBUG
         value: False
       - key: ALLOWED_HOSTS
-        value: "student-portal-if4i.onrender.com,localhost,127.0.0.1,0.0.0.0,*"
+        value: "student-portal-if4i.onrender.com,test-hvdl.onrender.com,localhost,127.0.0.1,0.0.0.0,*"
       - key: DATABASE_URL
-        value: "sqlite:///db.sqlite3"
-      - key: FORCE_SQLITE
-        value: "TRUE"
-      - key: NUCLEAR_FIX
-        value: "TRUE"
+        value: "postgresql://student_portal_db_a2e2_user:xP59H1q1uG9d3xwjTxMBRc90fhE86HOd@dpg-d380kkodl3ps73au33vg-a.oregon-postgres.render.com/student_portal_db_a2e2"
       - key: EMAIL_HOST_USER
         value: your-email@gmail.com
       - key: EMAIL_HOST_PASSWORD
         value: your-app-password
       - key: SITE_DOMAIN
-        value: student-portal.onrender.com
+        value: test-hvdl.onrender.com
       - key: SITE_NAME
         value: Sikshya Kendra
 
-# NUCLEAR FIX - Using SQLite instead of PostgreSQL
-# This will work immediately without any database connection issues
+# PostgreSQL Production Configuration
+# Using PostgreSQL database for production deployment

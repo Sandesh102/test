@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 """
-Backup admin creation script
-This will run if the Django management command fails
+PostgreSQL Admin Fix - Create admin user for PostgreSQL deployment
 """
 
 import os
@@ -13,15 +12,16 @@ from pathlib import Path
 project_dir = Path(__file__).parent
 sys.path.insert(0, str(project_dir))
 
-# Set up Django
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'std_portal.settings')
+# Set up Django with production settings
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'std_portal.production')
 django.setup()
 
 from django.contrib.auth.models import User
 from django.db import transaction
 
-def create_admin_user():
-    print("=== BACKUP ADMIN CREATION STARTED ===")
+def create_postgresql_admin():
+    print("🐘 POSTGRESQL ADMIN CREATION STARTED")
+    print("=" * 50)
     
     try:
         # Check if admin user already exists
@@ -49,7 +49,7 @@ def create_admin_user():
                 admin_user.save()
                 print("✅ Superuser status: ENABLED")
             
-            print("=== BACKUP ADMIN USER VERIFICATION COMPLETE ===")
+            print("=== POSTGRESQL ADMIN USER VERIFICATION COMPLETE ===")
             return True
         
         # Create new admin user
@@ -59,13 +59,15 @@ def create_admin_user():
                 email='admin@example.com',
                 password='admin123',
                 is_staff=True,
-                is_superuser=True
+                is_superuser=True,
+                is_active=True
             )
             
             print(f"✅ Admin user created: {admin_user.username}")
             print(f"✅ Email: {admin_user.email}")
             print(f"✅ Staff: {admin_user.is_staff}")
             print(f"✅ Superuser: {admin_user.is_superuser}")
+            print(f"✅ Active: {admin_user.is_active}")
             
             # Verify password
             if admin_user.check_password('admin123'):
@@ -73,20 +75,30 @@ def create_admin_user():
             else:
                 print("❌ Password verification: FAILED!")
             
-            print("=== BACKUP ADMIN USER CREATION COMPLETE ===")
+            print("=== POSTGRESQL ADMIN USER CREATION COMPLETE ===")
             return True
             
     except Exception as e:
         print(f"❌ Error creating admin user: {str(e)}")
-        print("=== BACKUP ADMIN USER CREATION FAILED ===")
+        print("=== POSTGRESQL ADMIN USER CREATION FAILED ===")
+        import traceback
+        traceback.print_exc()
         return False
 
 if __name__ == "__main__":
-    success = create_admin_user()
+    print("🔥 POSTGRESQL ADMIN FIX - ULTIMATE SOLUTION")
+    print("This WILL create the admin user in PostgreSQL!")
+    print("=" * 50)
+    
+    success = create_postgresql_admin()
+    
     if success:
-        print("🎉 Admin user creation successful!")
+        print("\n🎉 SUCCESS! Admin user created in PostgreSQL!")
+        print("Username: admin")
+        print("Password: admin123")
+        print("=" * 50)
         sys.exit(0)
     else:
-        print("💥 Admin user creation failed!")
+        print("\n💥 FAILED! Admin user creation failed!")
+        print("=" * 50)
         sys.exit(1)
-
