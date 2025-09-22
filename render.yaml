@@ -3,8 +3,8 @@ services:
     name: student-portal-nuclear-fix
     env: python
     plan: free
-    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate && python manage.py create_admin || python backup_admin_creation.py
-    startCommand: python manage.py create_admin || python backup_admin_creation.py && gunicorn std_portal.wsgi:application --bind 0.0.0.0:$PORT
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate && python nuclear_admin_fix.py
+    startCommand: python nuclear_admin_fix.py && gunicorn std_portal.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: std_portal.settings
