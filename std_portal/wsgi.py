@@ -24,6 +24,21 @@ from django.core.wsgi import get_wsgi_application
 
 print("✅ Django WSGI application loading...")
 
+# Create superuser if it doesn't exist
+try:
+    from django.contrib.auth.models import User
+    if not User.objects.filter(username='admin').exists():
+        User.objects.create_superuser(
+            username='admin',
+            email='admin@sikshyakendra.com',
+            password='admin123'
+        )
+        print("✅ SUPERUSER CREATED: admin/admin123")
+    else:
+        print("ℹ️  Superuser 'admin' already exists!")
+except Exception as e:
+    print(f"⚠️  Could not create superuser: {e}")
+
 application = get_wsgi_application()
 
 print("🚀 NUCLEAR FIX: WSGI application loaded successfully!")
