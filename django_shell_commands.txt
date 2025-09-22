@@ -1,0 +1,27 @@
+# Django Shell Commands to Create Admin User
+# Run these commands in Django shell
+
+# Method 1: Create new admin
+from django.contrib.auth.models import User
+User.objects.create_superuser('admin', 'admin@sikshyakendra.com', 'admin123')
+
+# Method 2: If admin exists, make it superuser
+admin = User.objects.get(username='admin')
+admin.is_superuser = True
+admin.is_staff = True
+admin.save()
+
+# Method 3: Reset password
+admin = User.objects.get(username='admin')
+admin.set_password('admin123')
+admin.save()
+
+# Check if admin exists
+User.objects.filter(username='admin').exists()
+
+# Get admin details
+admin = User.objects.get(username='admin')
+print(f"Username: {admin.username}")
+print(f"Email: {admin.email}")
+print(f"Is superuser: {admin.is_superuser}")
+print(f"Is staff: {admin.is_staff}")
