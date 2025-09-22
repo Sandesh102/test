@@ -3,8 +3,8 @@ services:
     name: student-portal-postgresql
     env: python
     plan: free
-    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate && python postgresql_admin_fix.py
-    startCommand: python postgresql_admin_fix.py && gunicorn std_portal.wsgi:application --bind 0.0.0.0:$PORT
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate && python force_postgresql.py
+    startCommand: python force_postgresql.py && gunicorn std_portal.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: std_portal.production
