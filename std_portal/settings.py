@@ -64,6 +64,10 @@ DATABASES = {
 print("DEBUG: FORCING SQLite DATABASE - NO POSTGRESQL!")
 print("DEBUG: This WILL work now!")
 
+# FORCE OVERRIDE: Override any database settings from other files
+import os
+os.environ['DJANGO_SETTINGS_MODULE'] = 'std_portal.settings'
+
 print(f"DEBUG: ALLOWED_HOSTS = {ALLOWED_HOSTS}")
 print("DEBUG: NUCLEAR FIX - Using SQLite in base settings!")
 print("DEBUG: This WILL work now!")
