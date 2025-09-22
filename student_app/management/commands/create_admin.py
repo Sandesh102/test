@@ -21,3 +21,4 @@ class Command(BaseCommand):
             self.stdout.write(f'Username: {username}')
             self.stdout.write(f'Password: {password}')
             self.stdout.write(f'Email: {email}')
+

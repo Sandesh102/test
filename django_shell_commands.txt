@@ -25,3 +25,4 @@ print(f"Username: {admin.username}")
 print(f"Email: {admin.email}")
 print(f"Is superuser: {admin.is_superuser}")
 print(f"Is staff: {admin.is_staff}")
+
