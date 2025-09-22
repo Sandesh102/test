@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: student-portal-nuclear
+    name: student-portal-nuclear-fix
     env: python
     plan: free
     buildCommand: |
@@ -19,9 +19,9 @@ services:
         value: "student-portal-if4i.onrender.com,localhost,127.0.0.1,0.0.0.0,*"
       - key: DATABASE_URL
         value: "sqlite:///db.sqlite3"
-      - key: NUCLEAR_FIX
-        value: "TRUE"
       - key: FORCE_SQLITE
+        value: "TRUE"
+      - key: NUCLEAR_FIX
         value: "TRUE"
       - key: EMAIL_HOST_USER
         value: your-email@gmail.com
