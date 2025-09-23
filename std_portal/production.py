@@ -54,3 +54,4 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'your-app-password')
 # Site configuration
 SITE_DOMAIN = os.environ.get('SITE_DOMAIN', 'student-portal.onrender.com')
 SITE_NAME = os.environ.get('SITE_NAME', 'Sikshya Kendra')
+

@@ -102,3 +102,4 @@ if __name__ == "__main__":
         print("\n💥 FAILED! Admin user creation failed!")
         print("=" * 50)
         sys.exit(1)
+

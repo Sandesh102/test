@@ -7,7 +7,7 @@ services:
     startCommand: python debug_500.py && python force_postgresql.py && gunicorn std_portal.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: DJANGO_SETTINGS_MODULE
-        value: std_portal.production
+        value: std_portal.settings
       - key: SECRET_KEY
         value: postgresql-production-secret-key-2025-ultimate-solution
       - key: DEBUG

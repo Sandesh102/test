@@ -1,7 +1,7 @@
 """
 Django settings for std_portal project.
 
-NUCLEAR FIX - This WILL work with SQLite!
+POSTGRESQL PRODUCTION CONFIGURATION
 """
 
 from pathlib import Path
@@ -10,34 +10,39 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# NUCLEAR FIX: Force SQLite database IMMEDIATELY
-print("🚀 NUCLEAR FIX: FORCING SQLite DATABASE!")
-print("🚀 NO POSTGRESQL - ONLY SQLite!")
+# POSTGRESQL CONFIGURATION
+print("🚀 POSTGRESQL CONFIGURATION!")
+print("🚀 USING POSTGRESQL DATABASE!")
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'nuclear-fix-secret-key-2025-ultimate-solution-working'
+SECRET_KEY = 'postgresql-production-secret-key-2025-ultimate-solution'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
 ALLOWED_HOSTS = [
     'student-portal-if4i.onrender.com',
+    'test-hvdl.onrender.com',
     'localhost',
     '127.0.0.1',
     '0.0.0.0',
     '*',
 ]
 
-# NUCLEAR FIX: Force SQLite database - NO POSTGRESQL!
+# POSTGRESQL DATABASE CONFIGURATION
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'student_portal_db_a2e2',
+        'USER': 'student_portal_db_a2e2_user',
+        'PASSWORD': 'xP59H1q1uG9d3xwjTxMBRc90fhE86HOd',
+        'HOST': 'dpg-d380kkodl3ps73au33vg-a.oregon-postgres.render.com',
+        'PORT': '5432',
     }
 }
 
-print("✅ DATABASE: SQLite configured!")
-print("✅ NO POSTGRESQL DEPENDENCIES!")
+print("✅ DATABASE: PostgreSQL configured!")
+print("✅ USING POSTGRESQL DATABASE!")
 
 # Application definition
 INSTALLED_APPS = [
@@ -93,8 +98,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'std_portal.wsgi.application'
 
-# NUCLEAR FIX: Override any database settings
-print("🚀 NUCLEAR FIX: Database overridden to SQLite!")
+# POSTGRESQL: Database configuration confirmed
+print("🚀 POSTGRESQL: Database configuration confirmed!")
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -177,8 +182,8 @@ AUTHENTICATION_BACKENDS = [
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'noreply@sikshyakendra.com'
 
-print("✅ NUCLEAR FIX: All settings configured for SQLite!")
-print("✅ NO POSTGRESQL - ONLY SQLite!")
+print("✅ POSTGRESQL: All settings configured for PostgreSQL!")
+print("✅ USING POSTGRESQL DATABASE!")
 
 # Allauth Settings
 ACCOUNT_EMAIL_REQUIRED = True
@@ -222,4 +227,4 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-print("🚀 NUCLEAR FIX COMPLETE - READY TO DEPLOY!")
+print("🚀 POSTGRESQL CONFIGURATION COMPLETE - READY TO DEPLOY!")
